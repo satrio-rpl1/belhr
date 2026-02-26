@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alarm</title>
+    <meta name="description" content="Set alarms by time and day of week with custom audio upload." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <!-- HEADER CLOCK -->
+    <header class="app-header">
+        <div class="brand brand-left">
+            <img src="WhatsApp Image 2026-02-25 at 15.50.28.jpeg" alt="Logo" class="brand-logo" />
+        </div>
+        <div class="live-clock center-clock">
+            <div id="clock-time">00:00:00</div>
+            <div id="clock-date">Senin, 01 Januari 2025</div>
+        </div>
+        <div class="brand brand-right">
+            <img src="download-removebg-preview.png" alt="Logo" class="brand-logo" />
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="app-main">
+
+        <!-- ALARMS SECTION -->
+        <section class="alarms-section">
+            <div class="section-header">
+                <h1 class="section-title">Alarm Reguler</h1>
+                <button class="btn-add" id="btnAddAlarmRegular">
+                    <span class="btn-icon">+</span>
+                    Tambah Alarm Reguler
+                </button>
+            </div>
+
+            <div id="alarmListRegular" class="alarm-list">
+                <div class="empty-state" id="emptyStateRegular">
+                    <div class="empty-icon">🔕</div>
+                    <p class="empty-title">Belum ada alarm reguler</p>
+                    <p class="empty-sub">Klik "Tambah Alarm Reguler" untuk membuat</p>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h1 class="section-title">Alarm Puasa</h1>
+                <button class="btn-add" id="btnAddAlarmPuasa">
+                    <span class="btn-icon">+</span>
+                    Tambah Alarm Puasa
+                </button>
+            </div>
+
+            <div id="alarmListPuasa" class="alarm-list">
+                <div class="empty-state" id="emptyStatePuasa">
+                    <div class="empty-icon">�</div>
+                    <p class="empty-title">Belum ada alarm puasa</p>
+                    <p class="empty-sub">Klik "Tambah Alarm Puasa" untuk membuat</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- RINGING OVERLAY -->
+    <div class="ringing-overlay hidden" id="ringingOverlay">
+        <div class="ringing-card">
+            <div class="ringing-pulse">
+                <span class="ringing-icon">🔔</span>
+            </div>
+            <div class="ringing-time" id="ringingTime">07:00</div>
+            <div class="ringing-label" id="ringingLabel">Alarm</div>
+            <div class="ringing-actions">
+                <button class="btn-dismiss" id="btnDismiss">
+                    <span>✖</span> Matikan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD / EDIT ALARM MODAL -->
+    <div class="modal-overlay hidden" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Tambah Alarm</h2>
+                <button class="modal-close" id="btnModalClose">✕</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Alarm Name -->
+                <div class="form-group">
+                    <label class="form-label" for="alarmName">Nama Alarm</label>
+                    <input class="form-input" type="text" id="alarmName"
+                        placeholder="Contoh: Bangun pagi, Sholat Zuhur..." maxlength="50" />
+                </div>
+
+                <!-- Time Picker -->
+                <div class="form-group">
+                    <label class="form-label" for="alarmTime">Waktu Alarm</label>
+                    <input class="form-input time-input" type="time" id="alarmTime" />
+                </div>
+
+                <!-- Day Picker -->
+                <div class="form-group">
+                    <label class="form-label">Hari Aktif</label>
+                    <div class="days-picker">
+                        <button class="day-btn" data-day="0" title="Minggu">Min</button>
+                        <button class="day-btn" data-day="1" title="Senin">Sen</button>
+                        <button class="day-btn" data-day="2" title="Selasa">Sel</button>
+                        <button class="day-btn" data-day="3" title="Rabu">Rab</button>
+                        <button class="day-btn" data-day="4" title="Kamis">Kam</button>
+                        <button class="day-btn" data-day="5" title="Jumat">Jum</button>
+                        <button class="day-btn" data-day="6" title="Sabtu">Sab</button>
+                    </div>
+                    <p class="form-hint">Jika tidak ada hari dipilih, alarm hanya berbunyi sekali</p>
+                </div>
+
+                <!-- Audio Upload -->
+                <div class="form-group">
+                    <label class="form-label">Audio Alarm (Opsional)</label>
+                    <div class="upload-area" id="uploadArea">
+                        <input type="file" id="audioFile" accept="audio/*" class="file-input" />
+                        <div class="upload-content" id="uploadContent">
+                            <span class="upload-icon">🎵</span>
+                            <p class="upload-text">Klik atau seret file audio ke sini</p>
+                            <p class="upload-hint">MP3, WAV, OGG, M4A — Max 20MB</p>
+                        </div>
+                        <div class="upload-preview hidden" id="uploadPreview">
+                            <span class="preview-icon">🎶</span>
+                            <div class="preview-info">
+                                <span class="preview-name" id="previewName"></span>
+                                <button class="preview-remove" id="previewRemove" type="button">✕</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category -->
+                <div class="form-group">
+                    <label class="form-label" for="alarmCategory">Jenis Alarm</label>
+                    <select class="form-input" id="alarmCategory">
+                        <option value="regular">Reguler</option>
+                        <option value="puasa">Puasa</option>
+                    </select>
+                </div>
+
+                <!-- Repeat Toggle -->
+                <div class="form-group form-row">
+                    <div>
+                        <label class="form-label" for="alarmRepeat">Ulangi setiap minggu</label>
+                        <p class="form-hint">Alarm berbunyi tiap minggu pada hari yang dipilih</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="alarmRepeat" checked />
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-cancel" id="btnCancel">Batal</button>
+                <button class="btn-save" id="btnSave">Simpan Alarm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
